@@ -2,6 +2,13 @@
   flake.modules.nixos.appearance = { pkgs, ... }: {
     fonts.packages = [ pkgs.dm-mono ];
     home-manager.users.tongy = {
+      # Also advertises prefer-dark through dconf to libadwaita and portals.
+      gtk.colorScheme = "dark";
+      qt = {
+        enable = true;
+        platformTheme.name = "gtk3";
+        style.name = "adwaita-dark";
+      };
       home.pointerCursor = {
         enable = true;
         package = pkgs.bibata-cursors;

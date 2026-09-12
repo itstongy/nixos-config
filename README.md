@@ -38,7 +38,7 @@ The default devShell contains the CLI suite. `nix develop ... --command zsh` use
 
 ## Core desktop
 
-Hyprland + Caelestia, Vicinae, Ghostty, Zen, Helium, Steam + Proton GE, Vesktop, Yazi, SSH, ChatGPT desktop, Obsidian, Bitwarden, LocalSend, GNOME Files, Syncthing, mpv, Zathura, Neovim, btop, Spotify and Tailscale. Screenshot/OCR and clipboard integration are included. GTK/Papirus and Everforest appearance are configured.
+Hyprland + Caelestia, Vicinae, Ghostty, Zen, Helium, Steam + Proton GE, Vesktop, Yazi, SSH, ChatGPT desktop, Obsidian, Bitwarden, LocalSend, GNOME Files, Syncthing, mpv, Zathura, Neovim, btop, Spotify and Tailscale. Screenshot/OCR and clipboard integration are included. Dark mode is declared for GTK, libadwaita, desktop portals and Qt, alongside Papirus and Everforest appearance.
 
 No alternative desktops/launchers, Hermes, Prism, F1top, radar extensions, broad language toolchains or host-inventory packages are installed by the core profile. The VM's existing application data is not deleted when a package is removed.
 
@@ -90,7 +90,7 @@ Stage new host files with `git add hosts/my-pc` so flakes can see them, then run
 - `assets/` contains the configuration sources referenced by Nix, not an independent dotfile installation system. JSON files are used where the application already has a JSON schema; Nix owns their deployment.
 - `hosts/` contains hardware, boot, monitor and VM-specific settings. The portable tools have no dependency on these definitions.
 
-A migration step backs up the previous configuration’s store links before Home Manager takes ownership. Home Manager backs up conflicting ordinary files with a `.before-home-manager` suffix and numbered backups on repeated conflicts. Removing a managed file declaration lets Home Manager remove its owned link on the next activation. Writable managed settings are replaced on activation. Accounts, cookies, SSH keys, notes, Steam libraries, Syncthing identity and Tailscale credentials are not managed or included in this repository. Sign in or restore those separately. Restart an application after switching if it caches its settings.
+A migration step backs up the previous configuration’s store links before Home Manager takes ownership. Home Manager backs up conflicting ordinary files with a `.before-home-manager` suffix and numbered backups on repeated conflicts. Removing a managed file declaration lets Home Manager remove its owned link on the next activation. Writable managed settings are replaced on activation. Accounts, cookies, private SSH keys, notes, Steam libraries, Syncthing identity and Tailscale credentials are not managed or included in this repository. The physical host declares its authorized public SSH keys. Sign in or restore those separately. Restart an application after switching if it caches its settings.
 
 ## Dictation
 
