@@ -104,7 +104,7 @@
         programs.zsh.enable = true;
         users.users.tongy.shell = p.zsh;
         environment.shells = [ p.zsh ];
-        environment.systemPackages = [
+        home-manager.users.tongy.home.packages = [
           (p.ghostty.wrap {
             settings = lib.optionalAttrs config.tongy.ghosttySoftwareRendering {
               custom-shader = lib.mkForce [ ];

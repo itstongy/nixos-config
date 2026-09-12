@@ -23,14 +23,14 @@
     services.upower.enable = true;
     services.power-profiles-daemon.enable = true;
     hardware.bluetooth.enable = true;
-    systemd.user.services.desktop-polkit = {
-      description = "Desktop authentication agent";
-      after = [ "graphical-session.target" ];
-      wantedBy = [ "graphical-session.target" ];
-      partOf = [ "graphical-session.target" ];
-      serviceConfig.Restart = "on-failure";
-      serviceConfig.RestartSec = 2;
-      serviceConfig.ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
+    home-manager.users.tongy.systemd.user.services.desktop-polkit = {
+      Unit.Description = "Desktop authentication agent";
+      Unit.After = [ "graphical-session.target" ];
+      Install.WantedBy = [ "graphical-session.target" ];
+      Unit.PartOf = [ "graphical-session.target" ];
+      Service.Restart = "on-failure";
+      Service.RestartSec = 2;
+      Service.ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
     };
     security.pam.services.hyprlock = { };
     services.gnome.gnome-keyring.enable = true;
@@ -41,6 +41,8 @@
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
       MOZ_ENABLE_WAYLAND = "1";
+    };
+    home-manager.users.tongy.home.sessionVariables = {
       EDITOR = "nvim";
       VISUAL = "nvim";
     };
@@ -53,7 +55,7 @@
       material-symbols
       rubik
     ];
-    environment.systemPackages = with pkgs; [
+    home-manager.users.tongy.home.packages = with pkgs; [
       caelestia-shell
       caelestia-cli
       quickshell
@@ -71,32 +73,31 @@
       brightnessctl
       bluetui
       networkmanagerapplet
-      papirus-icon-theme
-      adw-gtk3
     ];
-    environment.etc."xdg/gtk-3.0/settings.ini".text =
-      "[Settings]\ngtk-theme-name=adw-gtk3-dark\ngtk-icon-theme-name=Papirus-Dark\ngtk-font-name=Atkinson Hyperlegible 11\n";
-    environment.etc."xdg/gtk-4.0/settings.ini".text =
-      "[Settings]\ngtk-theme-name=adw-gtk3-dark\ngtk-icon-theme-name=Papirus-Dark\n";
-    tongy.settings = {
-      ".config/hypr/hyprland.lua".source = pkgs.writeText "hyprland.lua" (
+    home-manager.users.tongy.gtk = {
+      enable = true;
+      theme = {
+        name = "adw-gtk3-dark";
+        package = pkgs.adw-gtk3;
+      };
+      iconTheme = {
+        name = "Papirus-Dark";
+        package = pkgs.papirus-icon-theme;
+      };
+      font.name = "Atkinson Hyperlegible";
+      font.size = 11;
+      gtk4.extraConfig.gtk-theme-name = "adw-gtk3-dark";
+    };
+    home-manager.users.tongy.xdg.configFile = {
+      "hypr/hyprland.lua".text =
         builtins.readFile ../assets/hypr/hyprland.lua
         + "\n"
         + config.tongy.monitorConfig
         + "\n"
-        + config.tongy.extraHyprland
-      );
-      ".config/hypr/lua".source = ../assets/hypr/lua;
-      ".config/caelestia/shell.json" = {
-        source = ../assets/caelestia/shell.json;
-        writable = true;
-      };
-      ".config/gtk-3.0/settings.ini".source =
-        pkgs.writeText "gtk3.ini"
-          config.environment.etc."xdg/gtk-3.0/settings.ini".text;
-      ".config/gtk-4.0/settings.ini".source =
-        pkgs.writeText "gtk4.ini"
-          config.environment.etc."xdg/gtk-4.0/settings.ini".text;
+        + config.tongy.extraHyprland;
+      "hypr/lua".source = ../assets/hypr/lua;
     };
+    home-manager.users.tongy.tongy.writableFiles.".config/caelestia/shell.json" =
+      ../assets/caelestia/shell.json;
   };
 }

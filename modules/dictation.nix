@@ -32,23 +32,20 @@
       };
       config = lib.mkIf cfg.enable {
         tongy.extraHyprland = lib.mkAfter ''hl.bind("SUPER + CTRL + X", hl.dsp.exec_cmd("voxtype record toggle"), { description = "Voice dictation" })'';
-        environment.systemPackages = [ (lib.hiPrio voice) ];
-        systemd.user.services.voxtype = {
-          path = [
-            "/run/current-system/sw"
-            "/run/wrappers"
-          ];
-          description = "Push-to-talk dictation";
-          wantedBy = [ "graphical-session.target" ];
-          partOf = [ "graphical-session.target" ];
-          after = [
+        home-manager.users.tongy.home.packages = [ (lib.hiPrio voice) ];
+        home-manager.users.tongy.systemd.user.services.voxtype = {
+          Unit.Description = "Push-to-talk dictation";
+          Install.WantedBy = [ "graphical-session.target" ];
+          Unit.PartOf = [ "graphical-session.target" ];
+          Unit.After = [
             "graphical-session.target"
             "pipewire.service"
             "pipewire-pulse.service"
           ];
           # The same desktop profile starts dictation automatically on bare metal.
-          unitConfig.ConditionVirtualization = "!vm";
-          serviceConfig = {
+          Unit.ConditionVirtualization = "!vm";
+          Service = {
+            Environment = "PATH=/etc/profiles/per-user/tongy/bin:/run/current-system/sw/bin:/run/wrappers/bin";
             ExecStart = "${voice}/bin/voxtype -q daemon";
             Restart = "on-failure";
             RestartSec = 5;

@@ -1,6 +1,6 @@
 { inputs, config, ... }: {
   flake.modules.nixos.applications = { pkgs, ... }: {
-    environment.systemPackages = with pkgs; [
+    home-manager.users.tongy.home.packages = with pkgs; [
       inputs.zen.packages.${stdenv.hostPlatform.system}.beta
       config.flake.packages.${stdenv.hostPlatform.system}.helium
       config.flake.packages.${stdenv.hostPlatform.system}.chatgpt

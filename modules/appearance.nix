@@ -1,26 +1,19 @@
 { ... }: {
   flake.modules.nixos.appearance = { pkgs, ... }: {
     fonts.packages = [ pkgs.dm-mono ];
-    environment.etc."xdg/caelestia/wallpaper.jpg".source = ../assets/everforest-leaf.jpg;
-    tongy.settings = {
-      ".local/state/caelestia/scheme.json" = {
-        source = ../assets/caelestia/scheme.json;
-        writable = true;
+    home-manager.users.tongy = {
+      tongy.writableFiles = {
+        ".local/state/caelestia/scheme.json" = ../assets/caelestia/scheme.json;
+        ".local/state/caelestia/wallpaper/path.txt" = pkgs.writeText "wallpaper-path" "${
+          ../assets/everforest-leaf.jpg
+        }";
+        ".config/vesktop/settings.json" = ../assets/vesktop/settings.json;
+        ".config/vesktop/settings/settings.json" = ../assets/vesktop/vencord.json;
       };
-      ".local/state/caelestia/wallpaper/path.txt" = {
-        source = pkgs.writeText "wallpaper-path" "/etc/xdg/caelestia/wallpaper.jpg";
-        writable = true;
+      xdg.configFile = {
+        "vesktop/themes/everforest.css".source = ../assets/vesktop/everforest.css;
+        "vesktop/settings/quickCss.css".source = ../assets/vesktop/quickCss.css;
       };
-      ".config/vesktop/settings.json" = {
-        source = ../assets/vesktop/settings.json;
-        writable = true;
-      };
-      ".config/vesktop/settings/settings.json" = {
-        source = ../assets/vesktop/vencord.json;
-        writable = true;
-      };
-      ".config/vesktop/themes/everforest.css".source = ../assets/vesktop/everforest.css;
-      ".config/vesktop/settings/quickCss.css".source = ../assets/vesktop/quickCss.css;
     };
   };
 }
