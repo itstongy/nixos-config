@@ -39,6 +39,9 @@
     programs.dconf.enable = true;
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     environment.sessionVariables = {
+      # SDDM/UWSM must receive the cursor theme before Hyprland starts.
+      XCURSOR_THEME = config.home-manager.users.tongy.home.pointerCursor.name;
+      XCURSOR_SIZE = toString config.home-manager.users.tongy.home.pointerCursor.size;
       NIXOS_OZONE_WL = "1";
       MOZ_ENABLE_WAYLAND = "1";
     };
