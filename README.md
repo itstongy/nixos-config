@@ -38,7 +38,7 @@ The default devShell contains the CLI suite. `nix develop ... --command zsh` use
 
 ## Core desktop
 
-Hyprland + Caelestia, Vicinae, Ghostty, Zen, Helium, Steam + Proton GE, Vesktop, Yazi, SSH, ChatGPT desktop, Obsidian, Bitwarden, LocalSend, GNOME Files, Syncthing, mpv, Zathura, Neovim, btop, Spotify and Tailscale. Screenshot/OCR and clipboard integration are included. Dark mode is declared for GTK, libadwaita, desktop portals and Qt, alongside Papirus and Everforest appearance.
+Hyprland + Caelestia, Vicinae, Ghostty, Zen, Helium, Steam + Proton GE, Vesktop, Yazi, SSH, ChatGPT desktop, Obsidian, Bitwarden, LocalSend, GNOME Files, Syncthing, mpv, Zathura, Neovim, btop, Spotify and Tailscale. Screenshot/OCR and clipboard integration are included. Dark mode is declared for GTK, libadwaita, desktop portals and Qt, alongside Papirus icons and the Everforest GTK 3/4 color overrides used by Nautilus and other GTK apps.
 
 No alternative desktops/launchers, Hermes, Prism, F1top, radar extensions, broad language toolchains or host-inventory packages are installed by the core profile. The VM's existing application data is not deleted when a package is removed.
 
