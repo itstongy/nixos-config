@@ -1,0 +1,8 @@
+result
+*-result
+.direnv/
+.env
+*.qcow2
+*.pem
+id_ed25519*
+*.age

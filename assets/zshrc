@@ -1,0 +1,88 @@
+# Large shared history, matching the Mac.
+HISTFILE="$HOME/.zhistory"
+SAVEHIST=500000
+HISTSIZE=500000
+setopt APPEND_HISTORY EXTENDED_HISTORY SHARE_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_VERIFY
+setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS INTERACTIVE_COMMENTS
+
+# Vi command-line editing with cursor feedback.
+bindkey -v
+export KEYTIMEOUT=1
+bindkey -M viins '^[[A' history-search-backward
+bindkey -M viins '^[[B' history-search-forward
+bindkey -M vicmd '^[[A' history-search-backward
+bindkey -M vicmd '^[[B' history-search-forward
+
+_zsh_vi_set_cursor() {
+  case "$KEYMAP" in
+    vicmd) print -n -- $'\e[2 q' ;;
+    *) print -n -- $'\e[6 q' ;;
+  esac
+}
+zle-keymap-select() { _zsh_vi_set_cursor; zle reset-prompt }
+zle-line-init() { zle -K viins; _zsh_vi_set_cursor; zle reset-prompt }
+zle-line-finish() { print -n -- $'\e[0 q' }
+zle -N zle-keymap-select
+zle -N zle-line-init
+zle -N zle-line-finish
+
+# Completion behavior.
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+zstyle ':completion:*' list-dirs-first true
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+autoload -Uz compinit
+compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-${ZSH_VERSION}"
+_comp_options+=(globdots)
+
+# Fuzzy history/file/directory widgets.
+if command -v fzf >/dev/null 2>&1; then
+  if command -v fd >/dev/null 2>&1; then
+    export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --strip-cwd-prefix --exclude .git'
+  fi
+  source <(fzf --zsh)
+fi
+
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --icons=always --color=always $realpath 2>/dev/null || ls -la $realpath'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview 'ps -p $word -o pid,ppid,command'
+
+# Navigation and display aliases.
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --icons=always --color=auto --group-directories-first'
+  alias ll='eza -lh --icons=always --color=auto --group-directories-first --git'
+  alias la='eza -lah --icons=always --color=auto --group-directories-first --git'
+  alias lt='eza --tree --level=2 --icons=always --color=auto --group-directories-first'
+  alias lta='eza --tree --level=2 -a --icons=always --color=auto --group-directories-first --git-ignore'
+else
+  alias ll='ls -lh'
+  alias la='ls -lah'
+fi
+
+alias noidle='systemd-inhibit --what=idle:sleep --why="No sleep while downloading" sleep infinity'
+
+export EDITOR=nvim
+export VISUAL=nvim
+
+# Let Yazi change the calling shell's directory when it exits.
+yazi() {
+  local tmp cwd
+  tmp="$(mktemp -t yazi-cwd.XXXXXX)" || return
+  command yazi "$@" --cwd-file="$tmp"
+  if cwd="$(<"$tmp")" && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
+    builtin cd -- "$cwd"
+  fi
+  command rm -f -- "$tmp"
+}
+alias y='yazi'
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd='z'
+fi

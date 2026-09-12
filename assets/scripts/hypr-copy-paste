@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Give Super+C/V conventional copy/paste behaviour. Terminal applications use
+# Ctrl+Shift so Super+C never turns into the shell's interrupt character.
+action="$1"
+class=$(hyprctl activewindow | sed -n 's/^[[:space:]]*class: //p' | head -n 1)
+
+case "$action" in
+    copy) key=C ;;
+    paste) key=V ;;
+    *) exit 2 ;;
+esac
+
+case "$class" in
+    com.mitchellh.ghostty|org.tongy.*)
+        modifiers=CTRL_SHIFT
+        ;;
+    *)
+        modifiers=CTRL
+        ;;
+esac
+
+exec hyprctl dispatch "hl.dsp.send_shortcut({ mods = \"$modifiers\", key = \"$key\" })"
