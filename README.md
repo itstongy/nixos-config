@@ -59,6 +59,8 @@ nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable 
 sudo nixos-rebuild switch --flake .#YOUR_HOST
 ```
 
+[`tongynix`](hosts/tongynix/README.md) is the physical desktop host, prepared for a fresh UEFI installation with an ext4 root labelled `tongynix-root` and a FAT32 EFI partition labelled `TONGYBOOT`. Its host guide contains the installation steps and captured hardware.
+
 `nixos-vm` is only for the existing VM. It contains that VM's filesystem UUID, virtual graphics, bootloader and local SSH public key. Do not use it as a new physical machine's host definition.
 
 For a new NixOS machine, add `hosts/<hostname>/default.nix` and its generated hardware configuration. Every directory under `hosts/` becomes a flake host automatically and imports the same desktop profile. Preserve the new installation's bootloader configuration and `system.stateVersion`.
