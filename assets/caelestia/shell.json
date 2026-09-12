@@ -1,0 +1,213 @@
+{
+  "appearance": {
+    "anim": {
+      "durations": {
+        "scale": 0.9
+      }
+    },
+    "deformScale": 0.9,
+    "padding": {
+      "scale": 0.95
+    },
+    "rounding": {
+      "scale": 1.05
+    },
+    "spacing": {
+      "scale": 0.95
+    },
+    "transparency": {
+      "base": 0.64,
+      "enabled": true,
+      "layers": 0.2
+    }
+  },
+  "background": {
+    "desktopClock": {
+      "enabled": false
+    },
+    "enabled": true,
+    "visualiser": {
+      "enabled": false
+    },
+    "wallpaperEnabled": true
+  },
+  "bar": {
+    "activeWindow": {
+      "compact": false,
+      "inverted": false,
+      "showOnHover": true
+    },
+    "clock": {
+      "background": false,
+      "showDate": true,
+      "showIcon": true
+    },
+    "excludedScreens": [],
+    "persistent": true,
+    "scrollActions": {
+      "brightness": false,
+      "volume": false
+    },
+    "showOnHover": true,
+    "status": {
+      "showAudio": true,
+      "showBattery": false,
+      "showBluetooth": false,
+      "showKbLayout": false,
+      "showLockStatus": false,
+      "showMicrophone": true,
+      "showNetwork": true,
+      "showWifi": true
+    },
+    "tray": {
+      "background": false,
+      "compact": true
+    },
+    "workspaces": {
+      "activeIndicator": true,
+      "activeLabel": "",
+      "activeTrail": false,
+      "label": "",
+      "maxWindowIcons": 3,
+      "occupiedBg": true,
+      "occupiedLabel": "",
+      "perMonitorWorkspaces": false,
+      "showWindows": true,
+      "showWindowsOnSpecialWorkspaces": true,
+      "shown": 4,
+      "displayType": "Text"
+    }
+  },
+  "border": {
+    "rounding": 22,
+    "smoothing": 18,
+    "thickness": 8
+  },
+  "dashboard": {
+    "enabled": true,
+    "performance": {
+      "showBattery": true,
+      "showCpu": true,
+      "showGpu": true,
+      "showMemory": true,
+      "showNetwork": true,
+      "showStorage": true
+    },
+    "resourceUpdateInterval": 1500,
+    "showDashboard": true,
+    "showMedia": true,
+    "showOnHover": true,
+    "showPerformance": true,
+    "showWeather": true
+  },
+  "general": {
+    "apps": {
+      "audio": [
+        "ghostty",
+        "-e",
+        "wiremix"
+      ],
+      "explorer": [
+        "nautilus",
+        "--new-window"
+      ],
+      "playback": [
+        "mpv"
+      ],
+      "terminal": [
+        "ghostty"
+      ]
+    },
+    "idle": {
+      "inhibitWhenAudio": true,
+      "lockBeforeSleep": true,
+      "timeouts": []
+    },
+    "showOverFullscreen": false
+  },
+  "launcher": {
+    "enabled": true,
+    "favouriteApps": [
+      "org.gnome.Nautilus"
+    ],
+    "hiddenApps": [
+      "nm-connection-editor",
+      "bssh",
+      "bvnc",
+      "avahi-discover",
+      "lstopo",
+      "uuctl"
+    ],
+    "maxShown": 9,
+    "showOnHover": false,
+    "useFuzzy": {
+      "actions": true,
+      "apps": true,
+      "schemes": true,
+      "variants": true,
+      "wallpapers": true
+    },
+    "vimKeybinds": true
+  },
+  "lock": {
+    "enableFprint": false,
+    "hideNotifs": true
+  },
+  "notifs": {
+    "actionOnClick": true,
+    "defaultExpireTimeout": 5000,
+    "expire": true,
+    "fullscreen": "On",
+    "fullscreenExpireTimeout": 2000,
+    "openExpanded": false
+  },
+  "osd": {
+    "enableBrightness": true,
+    "enableMicrophone": true,
+    "enabled": true,
+    "hideDelay": 1800
+  },
+  "paths": {
+    "lyricsDir": "~/Music/lyrics/",
+    "wallpaperDir": "~/Pictures/Wallpapers"
+  },
+  "services": {
+    "audioIncrement": 0.05,
+    "brightnessIncrement": 0.05,
+    "gpuType": "Generic",
+    "lyricsBackend": "Auto",
+    "maxVolume": 1,
+    "smartScheme": false,
+    "useFahrenheit": false,
+    "useTwelveHourClock": true,
+    "visualiserBars": 40,
+    "weatherLocation": "-27.89033,153.3131"
+  },
+  "session": {
+    "enabled": true,
+    "vimKeybinds": true
+  },
+  "sidebar": {
+    "enabled": true,
+    "showOnHover": false
+  },
+  "utilities": {
+    "enabled": true,
+    "maxToasts": 3,
+    "toasts": {
+      "audioInputChanged": true,
+      "audioOutputChanged": true,
+      "capsLockChanged": false,
+      "chargingChanged": true,
+      "configLoaded": true,
+      "dndChanged": true,
+      "fullscreen": "off",
+      "gameModeChanged": true,
+      "kbLayoutChanged": false,
+      "kbLimit": true,
+      "nowPlaying": false,
+      "numLockChanged": false,
+      "vpnChanged": true
+    }
+  }
+}

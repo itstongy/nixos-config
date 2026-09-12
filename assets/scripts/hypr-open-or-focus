@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if (( $# < 3 )); then
+    printf 'usage: %s APP_ID [MATCH OPTION ...] -- COMMAND [ARG ...]\n' "${0##*/}" >&2
+    exit 2
+fi
+
+app_id=$1
+shift
+title_regex=
+legacy_app_id=
+legacy_title_regex=
+
+while [[ ${1-} != -- ]]; do
+    if (( $# < 2 )); then
+        printf '%s: match option needs a value\n' "${0##*/}" >&2
+        exit 2
+    fi
+
+    case $1 in
+        --title-regex) title_regex=$2 ;;
+        --legacy-app-id) legacy_app_id=$2 ;;
+        --legacy-title-regex) legacy_title_regex=$2 ;;
+        *)
+            printf '%s: unknown match option: %s\n' "${0##*/}" "$1" >&2
+            exit 2
+            ;;
+    esac
+    shift 2
+done
+
+if [[ ${1-} != -- ]]; then
+    printf '%s: expected -- before the launch command\n' "${0##*/}" >&2
+    exit 2
+fi
+shift
+
+if (( $# == 0 )); then
+    printf '%s: missing launch command\n' "${0##*/}" >&2
+    exit 2
+fi
+
+window_id=$(
+    hyprctl clients -j | jq -r \
+        --arg app_id "$app_id" \
+        --arg title_regex "$title_regex" \
+        --arg legacy_app_id "$legacy_app_id" \
+        --arg legacy_title_regex "$legacy_title_regex" '
+            [
+                .[]
+                | select(
+                    (
+                        (( .class // "") | ascii_downcase)
+                        == ($app_id | ascii_downcase)
+                        and (
+                            $title_regex == ""
+                            or ((.title // "") | test($title_regex; "i"))
+                        )
+                    )
+                    or (
+                        $legacy_app_id != ""
+                        and (
+                            (( .class // "") | ascii_downcase)
+                            == ($legacy_app_id | ascii_downcase)
+                        )
+                        and (
+                            $legacy_title_regex == ""
+                            or ((.title // "") | test($legacy_title_regex; "i"))
+                        )
+                    )
+                )
+            ]
+            | sort_by(
+                -(.focusHistoryID // 2147483647)
+            )
+            | last
+            | .address // empty
+        '
+)
+
+if [[ -n $window_id ]] \
+    && hyprctl dispatch "hl.dsp.focus({ window = \"address:$window_id\" })" >/dev/null; then
+    exit 0
+fi
+
+exec "$@"

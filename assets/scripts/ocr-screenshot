@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eu
+
+if ! command -v tesseract >/dev/null 2>&1; then
+    notify-send "Screenshot OCR unavailable" "Install tesseract and tesseract-data-eng first"
+    exit 1
+fi
+
+geometry=$(slurp) || exit 0
+image=$(mktemp --suffix=.png)
+text=$(mktemp)
+trap 'rm -f "$image" "$text"' EXIT INT TERM
+
+grim -g "$geometry" "$image"
+tesseract "$image" stdout -l eng 2>/dev/null > "$text"
+
+if [ ! -s "$text" ]; then
+    notify-send "Screenshot OCR" "No text was recognized"
+    exit 0
+fi
+
+wl-copy --type text/plain < "$text"
+notify-send "Screenshot OCR" "Recognized text copied to the clipboard"

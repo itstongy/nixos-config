@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -eu
+
+directory="$HOME/Pictures/Screenshots"
+file="$directory/$(date +%Y-%m-%d_%H-%M-%S).png"
+
+mkdir -p "$directory"
+
+case "${1:-full}" in
+    full)
+        grim "$file"
+        ;;
+    region)
+        geometry=$(slurp) || exit 0
+        grim -g "$geometry" "$file"
+        ;;
+    *)
+        printf 'Usage: %s [full|region]\n' "$0" >&2
+        exit 2
+        ;;
+esac
+
+# Keep clipboard staging off /tmp, which can hit its per-user quota.
+TMPDIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}" wl-copy --type image/png < "$file"
+notify-send "Screenshot captured" "Saved to $file and copied to the clipboard"

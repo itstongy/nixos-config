@@ -1,0 +1,8 @@
+require("lua.environment")
+require("lua.input")
+require("lua.appearance")
+require("lua.windows")
+require("lua.bindings")
+hl.on("hyprland.start", function()
+  hl.exec_cmd("uwsm-app -- caelestia-shell")
+end)
