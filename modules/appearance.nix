@@ -3,7 +3,11 @@
     fonts.packages = [ pkgs.dm-mono ];
     home-manager.users.tongy = {
       # Also advertises prefer-dark through dconf to libadwaita and portals.
-      gtk.colorScheme = "dark";
+      gtk = {
+        colorScheme = "dark";
+        gtk3.extraCss = builtins.readFile ../assets/everforest-gtk.css;
+        gtk4.extraCss = builtins.readFile ../assets/everforest-gtk.css;
+      };
       qt = {
         enable = true;
         platformTheme.name = "gtk3";
