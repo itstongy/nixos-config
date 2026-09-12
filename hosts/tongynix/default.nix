@@ -1,10 +1,30 @@
-{ config, ... }: {
+{ config, pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
     ./filesystems.nix
   ];
 
   networking.hostName = "tongynix";
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  services.openssh = {
+    enable = true;
+    openFirewall = true;
+    settings = {
+      PubkeyAuthentication = true;
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "no";
+    };
+  };
+  users.users.tongy.openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
+
+  services.syncthing = {
+    openDefaultPorts = true;
+    # Keep devices and folders paired through the local web interface.
+    overrideDevices = false;
+    overrideFolders = false;
+  };
   boot.loader.systemd-boot = {
     enable = true;
     configurationLimit = 10;
@@ -25,7 +45,7 @@
     hl.monitor({ output = "DP-2", mode = "2560x1440@59.95", position = "-2560x0", scale = 1 })
     hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
   '';
-  tongy.dictation.enable = false;
+  tongy.dictation.enable = true;
 
   zramSwap = {
     enable = true;

@@ -4,6 +4,7 @@ This host is ready to build for a fresh NixOS installation on the current deskto
 
 ## Included hardware settings
 
+- Latest stable kernel from the pinned nixpkgs input via `linuxPackages_latest`.
 - Intel Core i7-6700K with Intel microcode and KVM support.
 - NVIDIA GTX 1080 using proprietary `legacy_580` with modesetting. Newer driver branches and NVIDIA's open kernel modules do not support this card.
 - Main ROG PG279Q on DP-3, 2560×1440 at 144 Hz.
@@ -13,7 +14,13 @@ This host is ready to build for a fresh NixOS installation on the current deskto
 
 The full system, including its NVIDIA kernel module, was successfully built in the test VM. Physical graphics and suspend remain installation checks.
 
-Normal password login and sudo authentication apply. Dictation starts disabled. The VM's autologin, passwordless sudo and software rendering do not apply here.
+Normal password login and sudo authentication apply. VoxType dictation starts with the desktop; toggle recording with Super+Ctrl+X. The VM's autologin, passwordless sudo and software rendering do not apply here.
+
+## Remote access and syncing
+
+SSH is open on TCP port 22 for `tongy`, using the nine public keys copied from the Arch desktop's `~/.ssh/authorized_keys`. Password and root SSH login are disabled. Edit `hosts/tongynix/authorized_keys` to change access. Private keys are not stored in this repository.
+
+Syncthing starts as a system service running as `tongy`. Its sync and discovery ports are open, and devices and folders added through the web interface persist across rebuilds. After first login, open `http://127.0.0.1:8384`, pair the new device with your existing peers and select the folders to sync. A fresh installation has a new Syncthing identity unless you restore `.local/state/syncthing` before starting the service. The web interface stays local to the machine.
 
 ## Prepare the installation
 
