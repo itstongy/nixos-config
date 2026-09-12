@@ -7,6 +7,8 @@
     };
   };
   flake.modules.nixos.activity = { pkgs, ... }: {
-    environment.systemPackages = [ config.flake.packages.${pkgs.stdenv.hostPlatform.system}.btop ];
+    home-manager.users.tongy.home.packages = [
+      config.flake.packages.${pkgs.stdenv.hostPlatform.system}.btop
+    ];
   };
 }

@@ -1,6 +1,6 @@
 { ... }: {
   flake.modules.nixos.integration = { pkgs, ... }: {
-    xdg.mime.defaultApplications = {
+    home-manager.users.tongy.xdg.mimeApps.defaultApplications = {
       "inode/directory" = "org.gnome.Nautilus.desktop";
       "text/plain" = "tongy-editor.desktop";
       "text/markdown" = "tongy-editor.desktop";
@@ -17,24 +17,23 @@
       "video/webm" = "mpv.desktop";
       "audio/mpeg" = "mpv.desktop";
     };
-    environment.systemPackages = [
-      (pkgs.makeDesktopItem {
-        name = "tongy-editor";
-        desktopName = "Neovim";
-        exec = "ghostty --class=org.tongy.nvim -e nvim %F";
-        icon = "nvim";
-        categories = [
-          "Development"
-          "TextEditor"
-        ];
-      })
-    ];
-    systemd.user.services.clipboard-history = {
-      description = "Collect clipboard history for Caelestia";
-      wantedBy = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
-      partOf = [ "graphical-session.target" ];
-      serviceConfig = {
+    home-manager.users.tongy.xdg.mimeApps.enable = true;
+    home-manager.users.tongy.xdg.desktopEntries.tongy-editor = {
+      name = "Neovim";
+      exec = "ghostty --class=org.tongy.nvim -e nvim %F";
+      icon = "nvim";
+      categories = [
+        "Development"
+        "TextEditor"
+      ];
+      terminal = false;
+    };
+    home-manager.users.tongy.systemd.user.services.clipboard-history = {
+      Unit.Description = "Collect clipboard history for Caelestia";
+      Install.WantedBy = [ "graphical-session.target" ];
+      Unit.After = [ "graphical-session.target" ];
+      Unit.PartOf = [ "graphical-session.target" ];
+      Service = {
         ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store";
         Restart = "on-failure";
         RestartSec = 2;

@@ -87,6 +87,8 @@
       };
     };
   flake.modules.nixos.editor = { pkgs, ... }: {
-    environment.systemPackages = [ config.flake.packages.${pkgs.stdenv.hostPlatform.system}.neovim ];
+    home-manager.users.tongy.home.packages = [
+      config.flake.packages.${pkgs.stdenv.hostPlatform.system}.neovim
+    ];
   };
 }

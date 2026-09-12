@@ -49,16 +49,6 @@
       "volume": false
     },
     "showOnHover": true,
-    "status": {
-      "showAudio": true,
-      "showBattery": false,
-      "showBluetooth": false,
-      "showKbLayout": false,
-      "showLockStatus": false,
-      "showMicrophone": true,
-      "showNetwork": true,
-      "showWifi": true
-    },
     "tray": {
       "background": false,
       "compact": true
@@ -74,9 +64,38 @@
       "perMonitorWorkspaces": false,
       "showWindows": true,
       "showWindowsOnSpecialWorkspaces": true,
-      "shown": 4,
-      "displayType": "Text"
-    }
+      "shown": 4
+    },
+    "statusIcons": [
+      {
+        "id": "lockStatus",
+        "enabled": false
+      },
+      {
+        "id": "audio",
+        "enabled": true
+      },
+      {
+        "id": "microphone",
+        "enabled": true
+      },
+      {
+        "id": "kbLayout",
+        "enabled": false
+      },
+      {
+        "id": "network",
+        "enabled": true
+      },
+      {
+        "id": "bluetooth",
+        "enabled": false
+      },
+      {
+        "id": "battery",
+        "enabled": false
+      }
+    ]
   },
   "border": {
     "rounding": 22,
@@ -157,7 +176,7 @@
     "actionOnClick": true,
     "defaultExpireTimeout": 5000,
     "expire": true,
-    "fullscreen": "On",
+    "fullscreen": "on",
     "fullscreenExpireTimeout": 2000,
     "openExpanded": false
   },

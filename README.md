@@ -1,8 +1,10 @@
 # NixOS desktop
 
-My daily-driver configuration, tested in a QEMU VM. Pinned nixos-unstable, dendritic flake-parts modules and portable nix-wrapper-modules packages. No Home Manager, Hjem or bootstrap script.
+My daily-driver configuration, tested in a QEMU VM. Pinned nixos-unstable, dendritic flake-parts modules and portable nix-wrapper-modules packages. Home Manager owns the user desktop configuration and is applied with the NixOS rebuild.
 
 Currently targets x86_64 Linux. The portable packages also work on another x86_64 Linux distribution with Nix installed. macOS and ARM are not tested targets.
+
+Read the complete [desktop installation and operations guide](docs/desktop-guide.html) for machine setup, daily changes, recovery and the configuration map.
 
 ## Use the tools without installing the desktop
 
@@ -42,10 +44,18 @@ No alternative desktops/launchers, Hermes, Prism, F1top, radar extensions, broad
 
 ## Apply the NixOS configuration
 
+Keep the flake repository at `/etc/nixos` on each installed machine, owned by your user. If it is already cloned there, just `cd /etc/nixos` and pull. For an existing installation, preserve its generated configuration first. If `/etc/nixos.before-flake` exists, choose another backup name before running these commands.
+
 ```sh
-git clone https://github.com/itstongy/nixos-config.git
-cd nixos-config
+# Run once on an existing NixOS installation.
+# Stop if /etc/nixos is already this repository.
+# Keep the original generated configuration as a backup.
+sudo mv -T --no-clobber /etc/nixos /etc/nixos.before-flake
+sudo install -d -o "$(id -un)" -g "$(id -gn)" /etc/nixos
+git clone https://github.com/itstongy/nixos-config.git /etc/nixos
+cd /etc/nixos
 nix flake check
+nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable --no-link
 sudo nixos-rebuild switch --flake .#YOUR_HOST
 ```
 
@@ -72,11 +82,13 @@ Stage new host files with `git add hosts/my-pc` so flakes can see them, then run
 - `modules/flake.nix` assembles the explicit desktop profile from named `flake.modules.nixos` features. `nixosModules` exports those same modules for reuse.
 - `modules/wrappers.nix`, `editor.nix` and `activity.nix` own portable application settings. `portable.nix` provides the CLI bundle, shell, devShells and clean-home check.
 - `modules/applications.nix` is the core application/service list. `desktop.nix`, `launcher.nix`, `integration.nix` and `scripts.nix` configure the desktop and its supporting tools.
-- `modules/settings.nix` uses NixOS activation to install the declared user settings. Read-only configurations are store symlinks. Caelestia, Vicinae and Vesktop need writable settings, so activation installs their declared contents again on every switch. GUI edits to those managed files are temporary. Put lasting changes in this repository.
+- `modules/settings.nix` integrates Home Manager for `tongy`. The feature modules contribute user packages, GTK settings, MIME defaults, desktop entries and user services through `home-manager.users.tongy`. `xdg.configFile` owns read-only desktop files.
+- Caelestia, Vicinae and Vesktop need writable settings. The small `tongy.writableFiles` Home Manager option copies those declared files on activation. GUI edits to them remain temporary. Put lasting changes in this repository.
+- Portable wrappers remain independent of Home Manager. The desktop installs them through `home.packages`; the flake packages and development shells continue to work without activation. Hardware, login, audio, networking and system services remain in NixOS.
 - `assets/` contains the configuration sources referenced by Nix, not an independent dotfile installation system. JSON files are used where the application already has a JSON schema; Nix owns their deployment.
 - `hosts/` contains hardware, boot, monitor and VM-specific settings. The portable tools have no dependency on these definitions.
 
-Existing ordinary files replaced by store links are renamed with a `.before-nixos.<timestamp>` suffix. Writable managed settings are replaced on activation. Accounts, cookies, SSH keys, notes, Steam libraries, Syncthing identity and Tailscale credentials are not managed or included in this repository. Sign in or restore those separately. Restart an application after switching if it caches its settings.
+A migration step backs up the previous configuration’s store links before Home Manager takes ownership. Home Manager backs up conflicting ordinary files with a `.before-home-manager` suffix and numbered backups on repeated conflicts. Removing a managed file declaration lets Home Manager remove its owned link on the next activation. Writable managed settings are replaced on activation. Accounts, cookies, SSH keys, notes, Steam libraries, Syncthing identity and Tailscale credentials are not managed or included in this repository. Sign in or restore those separately. Restart an application after switching if it caches its settings.
 
 ## Dictation
 
@@ -87,17 +99,19 @@ Existing ordinary files replaced by store links are renamed with a `.before-nixo
 ```sh
 git pull --ff-only
 nix flake check
+nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable --no-link
 sudo nixos-rebuild switch --flake .#YOUR_HOST
 
 # Deliberately update upstream inputs:
 nix flake update
 nix flake check
+nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable --no-link
 sudo nixos-rebuild switch --flake .#YOUR_HOST
 ```
 
-ChatGPT and Helium are fixed-version, fixed-hash upstream packages in `custom-apps.nix`; update their version/hash together. The Vesktop theme is stored locally with its upstream licenses. Neovim plugins are provided by pinned nixpkgs, with runtime downloads disabled.
+Zen uses `zen-browser-flake`, Helium uses `schembriaiden/helium-browser-nix-flake`, and ChatGPT uses Numtide’s `llm-agents.nix` package of the official Linux app. `modules/custom-apps.nix` only re-exports the maintained Helium and ChatGPT packages. Their versions and source hashes come from the locked flake inputs. Update them with `nix flake update zen helium llm-agents`, then build and test before switching. The Vesktop theme is stored locally with its upstream licenses. Neovim plugins are provided by pinned nixpkgs, with runtime downloads disabled.
 
-Use `sudo nixos-rebuild switch --rollback` or select an earlier generation in GRUB. Do not change `system.stateVersion` for a normal package update.
+Use `sudo nixos-rebuild switch --rollback` or select an earlier generation in GRUB. Do not change `system.stateVersion` or `home.stateVersion` for a normal package update. Home Manager runs as `home-manager-tongy.service`; inspect that service if user activation fails. No separate `home-manager switch` is needed. `checks.caelestia-config` loads the declared JSON using the pinned Caelestia plugin and fails on unknown options; the old `bar.status` and `bar.workspaces.displayType` options have been migrated. After activation in the desktop session, run `bash tests/home-manager.sh` as `tongy` to check file ownership, writable settings, services and application availability.
 
 The current VM uses 1920×1080 and software Ghostty rendering. Its host-side QEMU launcher and clipboard bridge are machine tooling outside this repository. The previously reported mouse-modifier issue is not established as permanently fixed.
 

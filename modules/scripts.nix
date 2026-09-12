@@ -30,7 +30,7 @@
       };
     in
     {
-      environment.systemPackages = lib.mapAttrsToList (
+      home-manager.users.tongy.home.packages = lib.mapAttrsToList (
         name: runtimeInputs:
         pkgs.writeShellApplication {
           inherit name runtimeInputs;

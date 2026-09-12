@@ -26,12 +26,12 @@ hl.bind("SHIFT + PRINT", hl.dsp.exec_cmd("take-screenshot region"), { descriptio
 hl.bind("SUPER + PRINT", hl.dsp.exec_cmd("ocr-screenshot"), { description = "OCR region to clipboard" })
 
 -- Browser, ChatGPT app, and web shortcuts
-hl.bind("SUPER + SHIFT + A", hl.dsp.exec_cmd("hypr-open-or-focus zen -- zen"), { description = "Browser" })
-hl.bind("SUPER + SHIFT + BACKSLASH", hl.dsp.exec_cmd("uwsm-app -- zen https://claude.ai"), { description = "Claude" })
-hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("uwsm-app -- zen https://calendar.google.com"), { description = "Calendar" })
-hl.bind("SUPER + SHIFT + E", hl.dsp.exec_cmd("uwsm-app -- zen https://gmail.com"), { description = "Email" })
+hl.bind("SUPER + SHIFT + A", hl.dsp.exec_cmd("hypr-open-or-focus zen-beta --legacy-app-id zen -- zen-beta --name zen-beta"), { description = "Browser" })
+hl.bind("SUPER + SHIFT + BACKSLASH", hl.dsp.exec_cmd("uwsm-app -- zen-beta --name zen-beta https://claude.ai"), { description = "Claude" })
+hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("uwsm-app -- zen-beta --name zen-beta https://calendar.google.com"), { description = "Calendar" })
+hl.bind("SUPER + SHIFT + E", hl.dsp.exec_cmd("uwsm-app -- zen-beta --name zen-beta https://gmail.com"), { description = "Email" })
 hl.bind("SUPER + SHIFT + Y", hl.dsp.exec_cmd("hypr-open-or-focus org.tongy.yazi -- ghostty --class=org.tongy.yazi -e yazi $HOME/Documents"), { description = "Yazi Documents" })
-hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("uwsm-app -- zen https://messenger.com"), { description = "Messenger" })
+hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("uwsm-app -- zen-beta --name zen-beta https://messenger.com"), { description = "Messenger" })
 
 -- Window control
 hl.bind("SUPER + W", hl.dsp.window.close(), { description = "Close window" })
