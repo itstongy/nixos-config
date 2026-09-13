@@ -29,3 +29,12 @@ hl.window_rule({ name = "windows-21", stay_focused = true, match = { title = "^(
 hl.window_rule({ name = "niri-steam-friends", match = { class = "^(steam|Steam)$", title = "^Friends List$" }, float = true, size = "480 900" })
 hl.window_rule({ name = "niri-bitwarden-extension", match = { class = "^zen$", title = "^Extension: [(]Bitwarden Password Manager[)].*" }, float = true, center = true, size = "520 720" })
 hl.window_rule({ name = "niri-chatgpt-opacity", match = { class = "^(chatgpt|ChatGPT)$" }, opacity = "0.92 override 0.92 override" })
+
+-- Last rule wins; removing the tag restores each window's normal opacity.
+hl.window_rule({
+    name = "temporary-opaque",
+    match = { tag = "temporary-opaque" },
+    opacity = "1.0 override 1.0 override 1.0 override",
+    opaque = true,
+    force_rgbx = true
+})

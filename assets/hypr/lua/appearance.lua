@@ -1,4 +1,4 @@
--- Migrated from conf.d/appearance.conf; preserve the existing behavior.
+-- Frosted glass: broad blur, restrained transparency, and soft edges.
 hl.config({
     general = {
         gaps_in = 5,
@@ -12,21 +12,25 @@ hl.config({
         layout = "dwindle"
     },
     decoration = {
-        rounding = 8,
-        active_opacity = 0.90,
-        inactive_opacity = 0.82,
+        rounding = 16,
+        rounding_power = 4.0,
+        active_opacity = 0.88,
+        inactive_opacity = 0.84,
         fullscreen_opacity = 1.0,
         shadow = {
             enabled = true,
-            range = 4,
+            range = 24,
             render_power = 3,
-            color = "rgba(1a1a1aee)"
+            color = "rgba(10182055)"
         },
         blur = {
             enabled = true,
-            size = 6,
-            passes = 2,
-            vibrancy = 0.18,
+            size = 8,
+            passes = 3,
+            vibrancy = 0.24,
+            noise = 0.008,
+            contrast = 0.95,
+            brightness = 1.04,
             popups = true
         }
     },
