@@ -34,6 +34,7 @@ hl.bind("SUPER + SHIFT + Y", hl.dsp.exec_cmd("hypr-open-or-focus org.tongy.yazi 
 hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("uwsm-app -- zen-beta --name zen-beta https://messenger.com"), { description = "Messenger" })
 
 -- Window control
+hl.bind("SUPER + Y", hl.dsp.window.tag({ tag = "temporary-opaque" }), { description = "Toggle window transparency" })
 hl.bind("SUPER + W", hl.dsp.window.close(), { description = "Close window" })
 hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }), { description = "Toggle floating" })
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }), { description = "Full screen" })
