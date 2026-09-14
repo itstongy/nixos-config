@@ -112,6 +112,7 @@
             env = lib.optionalAttrs config.tongy.ghosttySoftwareRendering { LIBGL_ALWAYS_SOFTWARE = "1"; };
           })
           p.zsh
+          p.cli-tools
           pkgs.yazi
           pkgs.eza
           pkgs.zoxide
