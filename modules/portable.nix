@@ -16,6 +16,7 @@
           git
           neovim
           btop
+          cli-tools
         ]
         ++ (with pkgs; [
           yazi

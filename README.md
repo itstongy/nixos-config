@@ -23,7 +23,7 @@ nix run github:itstongy/nixos-config#ghostty
 nix profile add github:itstongy/nixos-config#cli
 ```
 
-The CLI bundle contains configured Zsh/Powerlevel10k, tmux, Git, Neovim/LazyVim and btop, plus Yazi, eza, zoxide, SSH, direnv, fzf, ripgrep, fd and basic utilities. Wrappers carry their settings in the Nix store; they do not install dotfiles into the host home directory. History, editor state and caches are still writable. Use a Nerd Font in the host terminal for icons.
+The CLI bundle contains configured Zsh/Powerlevel10k, tmux, Git, Neovim/LazyVim and btop, plus Yazi, eza, zoxide, SSH, direnv, fzf, ripgrep, fd and basic utilities. Both the desktop and portable bundle include cmatrix, fast, speedtest-cli, gh, fastfetch, fetch, tldr and glances through `modules/cli-tools.nix`. Nixpkgs builds cmatrix with terminal default-background support; Ghostty supplies the transparency settings. Wrappers carry their settings in the Nix store; they do not install dotfiles into the host home directory. History, editor state and caches are still writable. Use a Nerd Font in the host terminal for icons.
 
 Project environments are separate from the desktop:
 

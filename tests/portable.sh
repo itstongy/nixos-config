@@ -14,4 +14,4 @@ trap 'tmux -L nixos-config-check kill-server 2>/dev/null || true' EXIT
 test "$(tmux -L nixos-config-check show-options -gv prefix)" = C-Space
 test "$(tmux -L nixos-config-check show-window-options -gv mode-keys)" = vi
 tmux -L nixos-config-check list-keys -T prefix | grep -q config_files
-for cmd in zsh git nvim tmux btop yazi eza zoxide ssh direnv fzf rg; do command -v "$cmd"; done
+for cmd in zsh git nvim tmux btop yazi eza zoxide ssh direnv fzf rg cmatrix fast speedtest-cli gh fastfetch fetch tldr glances; do command -v "$cmd"; done
