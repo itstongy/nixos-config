@@ -18,7 +18,7 @@
           timeout 15 quickshell --path ${../tests/caelestia-config.qml} --no-color > check.log 2>&1
           cat check.log
           grep -q CONFIG_CHECK_PASSED check.log
-          if grep -q CONFIG_CHECK_FAILED check.log; then exit 1; fi
+          if grep -Eq "CONFIG_CHECK_FAILED|TypeError|ReferenceError|no signal of the target matches" check.log; then exit 1; fi
           touch "$out"
         '';
   };

@@ -40,9 +40,28 @@
     package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
   };
 
+  # Use X11 for the greeter so its layout matches the NVIDIA desktop.
+  services.displayManager.sddm.wayland.enable = false;
+  services.displayManager.sddm.setupScript = ''
+    ${pkgs.xrandr}/bin/xrandr \
+      --output DP-2 --mode 2560x1440 --pos 0x0 \
+      --output DP-4 --mode 2560x1440 --rate 144 --pos 2560x0 --primary \
+      --output HDMI-0 --mode 2560x1440 --same-as DP-4
+  '';
+
+  tongy.extraHyprland = ''
+    hl.on("hyprland.start", function()
+      hl.timer(function()
+        hl.dispatch(hl.dsp.focus({ monitor = "DP-3" }))
+        hl.dispatch(hl.dsp.focus({ workspace = "1" }))
+      end, { timeout = 1000, type = "oneshot" })
+    end)
+  '';
+
   tongy.monitorConfig = ''
     hl.monitor({ output = "DP-3", mode = "2560x1440@144", position = "0x0", scale = 1 })
     hl.monitor({ output = "DP-2", mode = "2560x1440@59.95", position = "-2560x0", scale = 1 })
+    hl.monitor({ output = "HDMI-A-1", mode = "2560x1440@59.95", position = "auto", scale = 1, mirror = "DP-3" })
     hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
   '';
   tongy.dictation.enable = true;

@@ -1,5 +1,5 @@
 { ... }: {
-  flake.modules.nixos.compositor = { pkgs, config, ... }: {
+  flake.modules.nixos.compositor = { pkgs, config, lib, ... }: {
     programs.hyprland = {
       enable = true;
       withUWSM = true;
@@ -7,7 +7,7 @@
     services.displayManager = {
       sddm = {
         enable = true;
-        wayland.enable = true;
+        wayland.enable = lib.mkDefault true;
       };
       defaultSession = "hyprland-uwsm";
     };
