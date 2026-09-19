@@ -17,6 +17,7 @@
     size = lib.mkForce 24;
   };
   home-manager.users.tongy.home.file."Documents/.stignore".source = ./documents.stignore;
+  home-manager.users.tongy.xdg.configFile."zen/REDACTED/user.js".source = ./zen-user.js;
   services.syncthing.settings = {
     devices."tongy-surface".id = "REDACTED";
     devices.mac = {
