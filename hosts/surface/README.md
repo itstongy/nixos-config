@@ -11,6 +11,24 @@ and the standard Adwaita cursor.
 The existing user password remains on the machine. SSH stays enabled and the Mac's
 public key is declared; no private keys or passwords belong in this repository.
 
+## SSH access
+
+The Surface's dedicated private key is `~/.ssh/surface_ed25519`; only its public
+half is tracked here. `ssh-config` provides the existing machine aliases using
+that key. `authorized_keys` retains the trusted machine/mobile/security-key set
+already used on tongylab. Comet receives the Surface's public key only and has no
+access back to the Surface.
+
+From the Mac, tongylab or Linux desktop, use `ssh surface`. This connects to
+`tongy@REDACTED` over Tailscale. From the Surface, use `ssh mac`, `ssh lab`,
+`ssh linux`, or `ssh comet`. These directions were verified during setup.
+
+Asahi and petersbirds were offline during setup. Their aliases exist on the
+Surface, but its public key still needs installing there, and their SSH config
+needs the `surface` alias. Asahi's existing public key is already trusted by the
+Surface. The copied `lab-root` alias is not verified: direct root login was also
+denied from the Mac, so use `ssh lab` and its existing sudo workflow.
+
 Documents syncs with the Mac and tongylab over Tailscale. `documents.stignore`
 copies the existing Documents exclusions, including `/09_SECONDBRAIN`; Obsidian
 Sync owns the vault. Peer device identities are public, but Syncthing API keys and

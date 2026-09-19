@@ -45,9 +45,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   services.openssh.enable = true;
-  users.users.tongy.openssh.authorizedKeys.keys = [
-    "REDACTED"
-  ];
+  users.users.tongy.openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
+  home-manager.users.tongy.home.file.".ssh/config".source = ./ssh-config;
 
   # Preserve settings selected during the Surface's graphical installation.
   services.xserver.enable = true;
