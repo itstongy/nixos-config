@@ -1,13 +1,24 @@
 # Surface Pro 4
 
-Host name: `surface`. Keep this Git checkout at `/etc/nixos`, owned by `tongy`.
+Host name: `tongy-surface`. The flake target remains `surface`. Keep this Git
+checkout at `/etc/nixos`, owned by `tongy`.
 
 This host imports the Surface's original `hardware-configuration.nix` unchanged,
 including its ext4 root, EFI partition and swap UUIDs. It preserves systemd-boot,
 and `system.stateVersion = "26.05"` from the initial
-installation. It uses the shared Hyprland desktop with 2x scaling on `eDP-1`.
+installation. It uses the shared Hyprland desktop with 1.5x scaling on `eDP-1`
+and the standard Adwaita cursor.
 The existing user password remains on the machine. SSH stays enabled and the Mac's
 public key is declared; no private keys or passwords belong in this repository.
+
+Documents syncs with the Mac and tongylab over Tailscale. `documents.stignore`
+copies the existing Documents exclusions, including `/09_SECONDBRAIN`; Obsidian
+Sync owns the vault. Peer device identities are public, but Syncthing API keys and
+device private keys must never be committed. Pairing must also be accepted on peers.
+
+The keyboard tray menu offers Show keyboard and Hide keyboard. It launches wvkbd
+only when requested and starts with the graphical session. LocalSend's incoming
+TCP and UDP port 53317 is allowed; Syncthing TCP 22000 is allowed on Tailscale only.
 
 The pinned `nixos-hardware` Surface Pro Intel module supplies the linux-surface
 kernel and enables `iptsd` for touchscreen and pen input. The first kernel build
