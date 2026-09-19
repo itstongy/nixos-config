@@ -6,6 +6,9 @@
   ];
 
   networking.hostName = "surface";
+  # LocalSend discovery and incoming transfers.
+  networking.firewall.allowedTCPPorts = [ 53317 ];
+  networking.firewall.allowedUDPPorts = [ 53317 ];
   # Test workaround for a black internal panel restored by an output reset.
   boot.kernelParams = lib.mkAfter [ "i915.enable_psr=0" ];
   boot.loader.systemd-boot = {
