@@ -76,7 +76,7 @@
         inherit pkgs;
         settings = {
           user = {
-            name = "REDACTED";
+            name = "itstongy";
             email = "16379581+itstongy@users.noreply.github.com";
           };
           init.defaultBranch = "main";

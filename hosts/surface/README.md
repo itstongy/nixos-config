@@ -3,36 +3,18 @@
 Host name: `tongy-surface`. The flake target remains `surface`. Keep this Git
 checkout at `/etc/nixos`, owned by `tongy`.
 
-This host imports the Surface's original `hardware-configuration.nix` unchanged,
-including its ext4 root, EFI partition and swap UUIDs. It preserves systemd-boot,
-and `system.stateVersion = "26.05"` from the initial
-installation. It uses the shared Hyprland desktop with 1.5x scaling on `eDP-1`
-and the standard Adwaita cursor.
-The existing user password remains on the machine. SSH stays enabled and the Mac's
-public key is declared; no private keys or passwords belong in this repository.
+Machine-specific settings live outside Git in
+`/home/tongy/.config/nixos-private/surface/`. Its `default.nix` imports the
+installer-generated `hardware-configuration.nix` and declares the local SSH
+access list, SSH aliases, Syncthing peers, Documents exclusions and browser profile
+settings. Preserve this directory in your private backups. Never put it in the
+public repository. The directory is required for evaluation and rebuilds use
+`--impure` to read it.
 
-## SSH access
-
-The Surface's dedicated private key is `~/.ssh/surface_ed25519`; only its public
-half is tracked here. `ssh-config` provides the existing machine aliases using
-that key. `authorized_keys` retains the trusted machine/mobile/security-key set
-already used on tongylab. Comet receives the Surface's public key only and has no
-access back to the Surface.
-
-From the Mac, tongylab or Linux desktop, use `ssh surface`. This connects to
-`tongy@REDACTED` over Tailscale. From the Surface, use `ssh mac`, `ssh lab`,
-`ssh linux`, or `ssh comet`. These directions were verified during setup.
-
-Asahi and petersbirds were offline during setup. Their aliases exist on the
-Surface, but its public key still needs installing there, and their SSH config
-needs the `surface` alias. Asahi's existing public key is already trusted by the
-Surface. The copied `lab-root` alias is not verified: direct root login was also
-denied from the Mac, so use `ssh lab` and its existing sudo workflow.
-
-Documents syncs with the Mac and tongylab over Tailscale. `documents.stignore`
-copies the existing Documents exclusions, including `/09_SECONDBRAIN`; Obsidian
-Sync owns the vault. Peer device identities are public, but Syncthing API keys and
-device private keys must never be committed. Pairing must also be accepted on peers.
+The shared desktop uses Hyprland, 1.5x scaling and the Adwaita cursor. Passwords,
+SSH private keys and service credentials remain in their normal local stores.
+Use `ssh surface` from a configured peer. Device addresses and access lists are
+managed locally.
 
 The keyboard tray menu offers Show keyboard and Hide keyboard. It launches wvkbd
 only when requested and starts with the graphical session. LocalSend's incoming
@@ -54,7 +36,7 @@ not yet confirmed; disabling this power-saving feature may increase battery use.
 ```sh
 cd /etc/nixos
 git pull --ff-only
-sudo nixos-rebuild switch --flake .#surface
+sudo nixos-rebuild switch --impure --flake .#surface
 ```
 
 Reboot after kernel updates to use the new kernel. A desktop session may need a
@@ -69,8 +51,8 @@ versions recorded in `flake.lock`; these are separate operations.
 cd /etc/nixos
 git pull --ff-only
 nix flake update
-sudo nixos-rebuild build --flake .#surface
-sudo nixos-rebuild switch --flake .#surface
+sudo nixos-rebuild build --impure --flake .#surface
+sudo nixos-rebuild switch --impure --flake .#surface
 git add flake.lock
 git commit -m "Update flake inputs"
 git push
@@ -85,8 +67,8 @@ and `home.stateVersion` unchanged during routine upgrades.
 cd /etc/nixos
 git status
 git add hosts/surface
-sudo nixos-rebuild build --flake .#surface
-sudo nixos-rebuild switch --flake .#surface
+sudo nixos-rebuild build --impure --flake .#surface
+sudo nixos-rebuild switch --impure --flake .#surface
 git commit -m "Update Surface configuration"
 git push
 ```

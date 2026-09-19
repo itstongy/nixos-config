@@ -1,5 +1,5 @@
 { modulesPath, lib, pkgs, ... }: {
-  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
+  imports = [ (modulesPath + "/profiles/qemu-guest.nix") /home/tongy/.config/nixos-private/nixos-vm/default.nix ];
   # Interpreter for the host-side clipboard bridge agent.
   environment.systemPackages = [ pkgs.python3 ];
   nixpkgs.hostPlatform = "x86_64-linux";
@@ -28,10 +28,6 @@
     "console=tty0"
     "console=ttyS0,115200"
   ];
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/REDACTED";
-    fsType = "ext4";
-  };
   zramSwap = {
     enable = true;
     memoryPercent = 50;
@@ -45,9 +41,6 @@
       PermitRootLogin = "no";
     };
   };
-  users.users.tongy.openssh.authorizedKeys.keys = [
-    "REDACTED"
-  ];
   # Preserve the existing password in /etc/shadow; never put it in the store.
   users.mutableUsers = true;
   security.sudo.wheelNeedsPassword = false;

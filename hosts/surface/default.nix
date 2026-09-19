@@ -1,7 +1,7 @@
 { inputs, lib, pkgs, ... }:
 {
   imports = [
-    ./hardware-configuration.nix
+    /home/tongy/.config/nixos-private/surface/default.nix
     ./keyboard.nix
     inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
   ];
@@ -16,25 +16,6 @@
     name = lib.mkForce "Adwaita";
     size = lib.mkForce 24;
   };
-  home-manager.users.tongy.home.file."Documents/.stignore".source = ./documents.stignore;
-  home-manager.users.tongy.xdg.configFile."zen/REDACTED/user.js".source = ./zen-user.js;
-  services.syncthing.settings = {
-    devices."tongy-surface".id = "REDACTED";
-    devices.mac = {
-      id = "REDACTED";
-      addresses = [ "tcp://REDACTED:22000" ];
-    };
-    devices.tongylab = {
-      id = "REDACTED";
-      addresses = [ "tcp://REDACTED:22000" ];
-    };
-    folders.documents = {
-      id = "documents_sync";
-      label = "Documents Sync";
-      path = "/home/tongy/Documents";
-      devices = [ "mac" "tongylab" ];
-    };
-  };
   networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 22000 ];
   # Test workaround for a black internal panel restored by an output reset.
   boot.kernelParams = lib.mkAfter [ "i915.enable_psr=0" ];
@@ -45,8 +26,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   services.openssh.enable = true;
-  users.users.tongy.openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
-  home-manager.users.tongy.home.file.".ssh/config".source = ./ssh-config;
 
   # Preserve settings selected during the Surface's graphical installation.
   services.xserver.enable = true;

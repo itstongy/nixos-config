@@ -3,7 +3,7 @@ export HOME="$TMPDIR/clean-home"
 export XDG_CONFIG_HOME="$HOME/.config" XDG_DATA_HOME="$HOME/.local/share" XDG_CACHE_HOME="$HOME/.cache" XDG_STATE_HOME="$HOME/.local/state"
 export TERM=xterm-256color
 mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" "$XDG_STATE_HOME"
-test "$(git config --get user.name)" = 'REDACTED'
+test "$(git config --get user.name)" = 'itstongy'
 test "$(git config --get init.defaultBranch)" = main
 nvim --headless '+lua assert(vim.g.colors_name == "everforest"); assert(vim.treesitter.language.add("nix"))' +qa
 btop --version

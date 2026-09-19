@@ -1,6 +1,6 @@
 { config, pkgs, ... }: {
   imports = [
-    ./hardware-configuration.nix
+    /home/tongy/.config/nixos-private/tongynix/hardware-configuration.nix
     ./filesystems.nix
   ];
 
@@ -17,7 +17,7 @@
       PermitRootLogin = "no";
     };
   };
-  users.users.tongy.openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
+  users.users.tongy.openssh.authorizedKeys.keyFiles = [ /home/tongy/.config/nixos-private/tongynix/authorized_keys ];
 
   services.syncthing = {
     openDefaultPorts = true;
@@ -41,6 +41,7 @@
   };
 
   # Use X11 for the greeter so its layout matches the NVIDIA desktop.
+  services.xserver.enable = true;
   services.displayManager.sddm.wayland.enable = false;
   services.displayManager.sddm.setupScript = ''
     ${pkgs.xrandr}/bin/xrandr \

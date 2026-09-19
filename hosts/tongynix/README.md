@@ -18,7 +18,10 @@ Normal password login and sudo authentication apply. VoxType dictation starts wi
 
 ## Remote access and syncing
 
-SSH is open on TCP port 22 for `tongy`, using the nine public keys copied from the Arch desktop's `~/.ssh/authorized_keys`. Password and root SSH login are disabled. Edit `hosts/tongynix/authorized_keys` to change access. Private keys are not stored in this repository.
+SSH is open on TCP port 22 for `tongy`. Trusted public keys live in
+`/home/tongy/.config/nixos-private/tongynix/authorized_keys`, outside Git.
+Password and root SSH login are disabled. The hardware configuration also lives
+in this private directory. Back it up separately and restore it before building.
 
 Syncthing starts as a system service running as `tongy`. Its sync and discovery ports are open, and devices and folders added through the web interface persist across rebuilds. After first login, open `http://127.0.0.1:8384`, pair the new device with your existing peers and select the folders to sync. A fresh installation has a new Syncthing identity unless you restore `.local/state/syncthing` before starting the service. The web interface stays local to the machine.
 
@@ -58,15 +61,18 @@ sudo git clone https://github.com/itstongy/nixos-config.git /mnt/etc/nixos
 # Inspect the actual installation hardware without overwriting the host.
 sudo nixos-generate-config --root /mnt --show-hardware-config
 
+# Restore the private directory under /home/tongy/.config/nixos-private/
+# in the live environment and under /mnt/home/tongy/.config/nixos-private/
+# on the installed disk before continuing.
 # Install the physical desktop host, not nixos-vm.
-sudo nixos-install --flake /mnt/etc/nixos#tongynix
+sudo nixos-install --impure --flake /mnt/etc/nixos#tongynix
 
 # Set the desktop user's password before rebooting.
 sudo nixos-enter --root /mnt -c 'passwd tongy'
 sudo nixos-enter --root /mnt -c 'chown -R tongy:users /etc/nixos'
 ```
 
-Compare the generated hardware output with `hosts/tongynix/hardware-configuration.nix` and `filesystems.nix` before installation, especially if hardware or disk choices changed. Keep any required storage-controller or encryption modules. No new UUID is needed when using the declared labels.
+Compare the generated hardware output with the private `hardware-configuration.nix` and `filesystems.nix` before installation, especially if hardware or disk choices changed. Keep any required storage-controller or encryption modules. No new UUID is needed when using the declared labels.
 
 After installation succeeds, reboot from the installed disk and log in as `tongy`. Check both displays, networking, audio, lock/unlock and suspend. Connector names can differ between driver versions; inspect `hyprctl monitors` and adjust `tongy.monitorConfig` if needed. Pair Syncthing and authenticate Tailscale separately, then restore personal data.
 
@@ -75,11 +81,11 @@ After installation succeeds, reboot from the installed disk and log in as `tongy
 ```sh
 cd /etc/nixos
 git pull --ff-only
-nix flake check
+nix build .#checks.x86_64-linux.portable .#checks.x86_64-linux.caelestia-config --no-link
 nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable --no-link
-sudo nixos-rebuild test --flake .#tongynix
+sudo nixos-rebuild test --impure --flake .#tongynix
 # Once the desktop checks pass:
-sudo nixos-rebuild switch --flake .#tongynix
+sudo nixos-rebuild switch --impure --flake .#tongynix
 ```
 
 The installation baseline is `system.stateVersion = "26.05"`. Keep it unchanged for normal updates. System builds can be checked in the VM, but physical NVIDIA behaviour and installation must be tested on this desktop. Never switch the VM to this host.

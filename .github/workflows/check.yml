@@ -1,7 +1,6 @@
 name: Nix checks
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -10,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24
-      - run: nix flake check --print-build-logs
+      - run: nix build --print-build-logs .#checks.x86_64-linux.portable .#checks.x86_64-linux.caelestia-config

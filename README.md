@@ -54,21 +54,21 @@ sudo mv -T --no-clobber /etc/nixos /etc/nixos.before-flake
 sudo install -d -o "$(id -un)" -g "$(id -gn)" /etc/nixos
 git clone https://github.com/itstongy/nixos-config.git /etc/nixos
 cd /etc/nixos
-nix flake check
+nix build .#checks.x86_64-linux.portable .#checks.x86_64-linux.caelestia-config --no-link
 nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable --no-link
-sudo nixos-rebuild switch --flake .#YOUR_HOST
+sudo nixos-rebuild switch --impure --flake .#YOUR_HOST
 ```
 
 [`tongynix`](hosts/tongynix/README.md) is the physical desktop host, prepared for a fresh UEFI installation with an ext4 root labelled `tongynix-root` and a FAT32 EFI partition labelled `TONGYBOOT`. Its host guide contains the installation steps and captured hardware.
 
 `nixos-vm` is only for the existing VM. It contains that VM's filesystem UUID, virtual graphics, bootloader and local SSH public key. Do not use it as a new physical machine's host definition.
 
-For a new NixOS machine, add `hosts/<hostname>/default.nix` and its generated hardware configuration. Every directory under `hosts/` becomes a flake host automatically and imports the same desktop profile. Preserve the new installation's bootloader configuration and `system.stateVersion`.
+For a new NixOS machine, add `hosts/<hostname>/default.nix` and keep its generated hardware configuration outside Git. Every directory under `hosts/` becomes a flake host automatically and imports the same desktop profile. Preserve the new installation's bootloader configuration and `system.stateVersion`.
 
 ```nix
 # hosts/my-pc/default.nix
 { ... }: {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ /home/tongy/.config/nixos-private/my-pc/hardware-configuration.nix ];
   nixpkgs.hostPlatform = "x86_64-linux";
   networking.hostName = "my-pc";
   # Copy the bootloader settings and system.stateVersion from this
@@ -77,7 +77,7 @@ For a new NixOS machine, add `hosts/<hostname>/default.nix` and its generated ha
 }
 ```
 
-Stage new host files with `git add hosts/my-pc` so flakes can see them, then run `sudo nixos-rebuild switch --flake .#my-pc`. A fresh disk still requires the standard NixOS installation and hardware configuration. The shared user is `tongy`; set its password on the new machine. Autologin and passwordless sudo are confined to the VM.
+Stage new host files with `git add hosts/my-pc` so flakes can see them, then run `sudo nixos-rebuild switch --impure --flake .#my-pc`. A fresh disk still requires the standard NixOS installation and hardware configuration. The shared user is `tongy`; set its password on the new machine. Autologin and passwordless sudo are confined to the VM.
 
 ## Configuration ownership
 
@@ -100,15 +100,15 @@ A migration step backs up the previous configuration’s store links before Home
 
 ```sh
 git pull --ff-only
-nix flake check
+nix build .#checks.x86_64-linux.portable .#checks.x86_64-linux.caelestia-config --no-link
 nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable --no-link
-sudo nixos-rebuild switch --flake .#YOUR_HOST
+sudo nixos-rebuild switch --impure --flake .#YOUR_HOST
 
 # Deliberately update upstream inputs:
 nix flake update
-nix flake check
+nix build .#checks.x86_64-linux.portable .#checks.x86_64-linux.caelestia-config --no-link
 nix build .#checks.x86_64-linux.caelestia-config .#checks.x86_64-linux.portable --no-link
-sudo nixos-rebuild switch --flake .#YOUR_HOST
+sudo nixos-rebuild switch --impure --flake .#YOUR_HOST
 ```
 
 Zen uses `zen-browser-flake`, Helium uses `schembriaiden/helium-browser-nix-flake`, and ChatGPT uses Numtide’s `llm-agents.nix` package of the official Linux app. `modules/custom-apps.nix` only re-exports the maintained Helium and ChatGPT packages. Their versions and source hashes come from the locked flake inputs. Update them with `nix flake update zen helium llm-agents`, then build and test before switching. The Vesktop theme is stored locally with its upstream licenses. Neovim plugins are provided by pinned nixpkgs, with runtime downloads disabled.
@@ -124,3 +124,19 @@ The current VM uses 1920×1080 and software Ghostty rendering. Its host-side QEM
 - [Dendritic pattern](https://github.com/mightyiam/dendritic)
 
 The system24 CSS snapshot is from `refact0r/system24` at `07760bedf8642698a4ab12ca4eb8a96ff31d91ea`, including midnight-discord CSS at `85dd67148cbbbfa027cb091e41a479a16ab16a65`. Remote font/decorative asset requests were removed in favour of the packaged DM Mono font. Licenses are in `assets/vesktop/`.
+
+## Private machine settings
+
+This repository is public. Keep generated hardware files, disk identifiers,
+SSH access lists and aliases, peer addresses, Syncthing identities and browser
+profile paths in `/home/tongy/.config/nixos-private/<host>/`, outside Git.
+Existing hosts import those files and require `--impure` for system evaluation.
+Restore the private directory from a private backup before rebuilding or
+installing a host. Never put passwords, tokens or private keys in Nix source.
+
+The Surface uses a private `default.nix` module. The desktop uses private
+`hardware-configuration.nix` and `authorized_keys` files. The VM uses a private
+`default.nix` containing its root filesystem and SSH access configuration.
+
+GitHub Actions is disabled. The checked-in workflow has only a manual trigger
+and checks portable packages without evaluating private host configurations.

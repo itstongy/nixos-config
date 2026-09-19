@@ -6,7 +6,7 @@
     i18n.defaultLocale = "en_AU.UTF-8";
     users.users.tongy = {
       isNormalUser = true;
-      description = "REDACTED";
+      description = "itstongy";
       extraGroups = [
         "wheel"
         "networkmanager"
