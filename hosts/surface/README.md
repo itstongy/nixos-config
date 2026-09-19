@@ -4,13 +4,21 @@ Host name: `surface`. Keep this Git checkout at `/etc/nixos`, owned by `tongy`.
 
 This host imports the Surface's original `hardware-configuration.nix` unchanged,
 including its ext4 root, EFI partition and swap UUIDs. It preserves systemd-boot,
-the latest-kernel selection and `system.stateVersion = "26.05"` from the initial
+and `system.stateVersion = "26.05"` from the initial
 installation. It uses the shared Hyprland desktop with 2x scaling on `eDP-1`.
 The existing user password remains on the machine. SSH stays enabled and the Mac's
 public key is declared; no private keys or passwords belong in this repository.
 
-The standard kernel boots this device. Touchscreen and pen support have not been
-validated; this host does not yet add the linux-surface kernel or iptsd.
+The pinned `nixos-hardware` Surface Pro Intel module supplies the linux-surface
+kernel and enables `iptsd` for touchscreen and pen input. The first kernel build
+can take a long time. Reboot after building to load the driver; touchscreen and
+pen operation still need to be checked on the device.
+
+The login greeter uses X11; Hyprland still uses Wayland. During the first boot the
+panel remained black even though a screenshot showed the complete login screen.
+Turning the eDP output off and on restored the display. `i915.enable_psr=0` disables
+Panel Self Refresh as a targeted workaround to test on the next boot. The cause is
+not yet confirmed; disabling this power-saving feature may increase battery use.
 
 ## Pull configuration changes
 

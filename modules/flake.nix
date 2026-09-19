@@ -12,6 +12,7 @@
   flake.nixosConfigurations = lib.mapAttrs (
     name: _:
     inputs.nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs; };
       modules = [
         config.flake.modules.nixos.desktop
         (../hosts + "/${name}")

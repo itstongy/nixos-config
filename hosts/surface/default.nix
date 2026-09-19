@@ -1,9 +1,13 @@
-{ pkgs, ... }:
+{ inputs, lib, ... }:
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
+  ];
 
   networking.hostName = "surface";
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Test workaround for a black internal panel restored by an output reset.
+  boot.kernelParams = lib.mkAfter [ "i915.enable_psr=0" ];
   boot.loader.systemd-boot = {
     enable = true;
     configurationLimit = 10;
@@ -16,6 +20,9 @@
   ];
 
   # Preserve settings selected during the Surface's graphical installation.
+  services.xserver.enable = true;
+  # Keep the X11 greeter used during recovery; Hyprland still uses Wayland.
+  services.displayManager.sddm.wayland.enable = false;
   services.xserver.xkb.layout = "au";
   services.printing.enable = true;
   services.pipewire.alsa.support32Bit = true;
